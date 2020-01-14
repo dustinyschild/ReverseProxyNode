@@ -1,0 +1,12 @@
+{
+  "routes": [
+    {
+      "route": "/project1",
+      "address": "http://localhost:1001"
+    },
+    {
+      "route": "/project2",
+      "address": "http://localhost:1002"
+    }
+  ]
+}
