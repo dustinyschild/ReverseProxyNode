@@ -1,30 +1,28 @@
-const PORT = 8443;
+require('dotenv').config();
+const PORT = process.env.PORT || 8443;
 
-// Dependencies
+// // Dependencies
 const express = require("express");
 const proxy = require("http-proxy-middleware");
+const evh = require('express-vhost');
 
-// Config
-const { routes } = require("./config.json");
+//placeholder for domain tests
+const appFactory = function(echo) {
+    var app = express();
+    app.get('*', function(req, res) {
+        res.send(req.path + " at " + echo);
+    });
 
-const app = express();
+    return app;
+};
 
-for (route of routes) {
-  app.use(route.route,
-      proxy({
-          target: route.address,
-          pathRewrite: (path, req) => {
-              return path.split("/").slice(2).join("/"); // Could use use replace, but take care of the leading "/"
-          }
-      })
-  );
-}
+const server = express();
+server.use(evh.vhost(server.enabled('trust proxy')));
+server.listen(PORT);
 
-app.get("*", (req, res) => {
-    console.log("Request received...")
-    return res.send("Test successful!");
-});
-
-app.listen(PORT, () => {
-    console.log("Proxy listening on port " + PORT);
-});
+const { applications } = require("./config.json");
+applications.forEach(app =>
+    evh.register(
+        app.domain,
+        proxy({ target: app.target, changeOrigin: true })
+    ));

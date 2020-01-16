@@ -1,12 +1,19 @@
 {
-  "routes": [
+  "applications": [
     {
-      "route": "/project1",
-      "address": "http://localhost:1001"
+      "domain": "workcomp.local",
+      "route": "/",
+      "target": "https://google.com"
     },
     {
-      "route": "/project2",
-      "address": "http://localhost:1002"
+      "domain": "workcomp.dashboard.local",
+      "route": "/",
+      "target": "https://twitter.com"
+    },
+    {
+      "domain": "localhost",
+      "route": "/",
+      "target": "http://localhost:1234"
     }
   ]
 }
